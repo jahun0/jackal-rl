@@ -1,0 +1,23 @@
+<launch>
+
+  <!-- Include the Jackal control node -->
+  <include file="$(find jackal_control)/launch/control.launch" />
+
+  <!-- modified URDF/Xacro model of the Jackal robot with RPLidar -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro --inorder $(find jackal_oh)/urdf/jackal_rplidar.urdf.xacro" />
+
+  <!-- Launch the RPLidar ROS node -->
+  <node name="rplidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <param name="serial_port" type="string" value="/dev/ttyUSB0" />
+    <param name="serial_baudrate" type="int" value="115200" />
+    <param name="frame_id" type="string" value="rplidar_link" />
+    <param name="inverted" type="bool" value="false" />
+    <param name="angle_compensate" type="bool" value="true" />
+  </node>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Add any other required nodes and configurations here -->
+
+</launch>

@@ -1,0 +1,41 @@
+<launch>
+  <!-- Gmapping SLAM for Robot 1 -->
+  <group ns="jackal1">
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+      <remap from="scan" to="front/scan"/>
+    </node>
+
+    <!-- Move base for Robot 1 -->
+    <include file="$(find jackal_rl)/launch/move_base.launch"/>
+
+    <!-- Your navigation script for Robot 1 -->
+    <node pkg="jackal_rl" type="map_merge_multi_jackal.py" name="navigation_node" output="screen"/>
+  </group>
+
+  <!-- Gmapping SLAM for Robot 2 -->
+  <group ns="jackal2">
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+      <remap from="scan" to="front/scan"/>
+    </node>
+
+    <!-- Move base for Robot 2 -->
+    <include file="$(find jackal_rl)/launch/move_base.launch"/>
+
+    <!-- Your navigation script for Robot 2 -->
+    <node pkg="jackal_rl" type="map_merge_multi_jackal.py" name="navigation_node" output="screen"/>
+  </group>
+
+  <!-- Multirobot map merge -->
+  <node pkg="multirobot_map_merge" type="map_merge" name="map_merge" output="screen" >
+    <rosparam>
+      robots: ['jackal1', 'jackal2']
+      map_frame: "map"
+      odom_frame: "odom"
+      global_map_topic: "move_base/global_costmap/costmap"
+      map_resolution: 0.05
+      map_merge_rate: 1.0
+      estimator_type: "ekf"
+    </rosparam>
+  </node>
+
+</launch>
