@@ -1,6 +1,5 @@
 <launch>
 
-
   <!-- Include the Jackal control node -->
   <include file="$(find jackal_control)/launch/control.launch" />
 
@@ -8,13 +7,11 @@
   <param name="robot_description"
          command="$(find xacro)/xacro --inorder $(find jackal_oh)/urdf/jackal_rplidar_vr.urdf.xacro" />
 
-  <!-- Launch the RPLidar ROS node -->
-  <node name="rplidar" pkg="rplidar_ros" type="rplidarNode" output="screen">
-    <param name="serial_port" type="string" value="/dev/ttyUSB0" />
-    <param name="serial_baudrate" type="int" value="115200" />
-    <param name="frame_id" type="string" value="rplidar_link" />
-    <param name="inverted" type="bool" value="false" />
-    <param name="angle_compensate" type="bool" value="true" />
+  <!-- Launch the Hokuyo UST-20LX ROS node with urg_node -->
+  <node name="hokuyo" pkg="urg_node" type="urg_node">
+    <param name="ip_address" value="192.168.0.10"/>
+    <param name="port" value="10940" />
+    <param name="frame_id" type="string" value="hokuyo_link" />
   </node>
 
   <!-- Launch the RealSense ROS node -->
