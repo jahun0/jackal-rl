@@ -1,0 +1,4 @@
+# Minimal local dependencies for Jackal MARL stub / ingest checks
+numpy==2.0.2
+pettingzoo==1.25.0
+ray[rllib]==2.51.2
