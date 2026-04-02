@@ -42,8 +42,11 @@ def run_config_smoke():
         print("[*] Validating config by building algorithm...")
         try:
             algo = config.build()
+            print("[+] Algorithm built successfully. Running one tiny iteration step...")
+            results = algo.train()
+            reward_mean = results.get("env_runners", {}).get("episode_reward_mean", results.get("episode_reward_mean", "N/A"))
+            print(f"[+] SUCCESS: One PPO iteration completed. Reward mean: {reward_mean}")
             algo.stop()
-            print("[+] SUCCESS: RLlib config build passed cleanly.")
         except Exception as e:
             # Check if this is the expected ROS backend fallback missing in the local venv
             if "test_real_env" in str(e) or "Mock" in str(e) or "KeyError: 'ugv_jackal'" in str(e):
