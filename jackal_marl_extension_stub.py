@@ -25,6 +25,16 @@ class DiscreteStub:
 
     def contains(self, x):
         return 0 <= x < self.n
+        
+    def to_jsonable(self, sample_n):
+        return [int(x) for x in sample_n]
+        
+    def from_jsonable(self, sample_n):
+        return [int(x) for x in sample_n]
+
+    @property
+    def shape(self):
+        return ()
 
 class BoxStub:
     def __init__(self, low: float, high: float, shape: Tuple[int, ...], dtype: type = np.float32):
@@ -40,6 +50,12 @@ class BoxStub:
         if not isinstance(x, np.ndarray):
             x = np.array(x, dtype=self.dtype)
         return x.shape == self.shape
+        
+    def to_jsonable(self, sample_n):
+        return [np.asarray(x).tolist() for x in sample_n]
+        
+    def from_jsonable(self, sample_n):
+        return [np.asarray(x) for x in sample_n]
 
 UGV_AGENT = "ugv_jackal"
 UAV_AGENT = "uav_scout"
@@ -62,6 +78,12 @@ class JackalMarlExtensionStub:
     @property
     def possible_agents(self):
         return self.agents.copy()
+
+    def action_space(self, agent: str):
+        return self.action_spaces[agent]
+
+    def observation_space(self, agent: str):
+        return self.observation_spaces[agent]
 
     """Small MARL bridge wrapper around NavigationEnvROS semantics.
 
@@ -119,6 +141,14 @@ class JackalMarlExtensionStub:
 
     def observation_space(self, agent: str):
         return self.observation_spaces[agent]
+
+    @property
+    def observation_space(self):
+        return self.observation_spaces
+
+    @property
+    def action_space(self):
+        return self.action_spaces
 
     def reset(self, seed: Optional[int] = None, options: Optional[dict] = None) -> Tuple[Dict[str, List[float]], Dict[str, dict]]:
         if seed is not None:
