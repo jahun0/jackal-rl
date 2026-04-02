@@ -20,12 +20,26 @@ class DiscreteStub:
     def __init__(self, n: int):
         self.n = n
 
+    def sample(self):
+        return random.randint(0, self.n - 1)
+
+    def contains(self, x):
+        return 0 <= x < self.n
+
 class BoxStub:
     def __init__(self, low: float, high: float, shape: Tuple[int, ...], dtype: type = np.float32):
         self.low = low
         self.high = high
         self.shape = shape
         self.dtype = dtype
+
+    def sample(self):
+        return np.random.uniform(self.low, self.high, self.shape).astype(self.dtype)
+
+    def contains(self, x):
+        if not isinstance(x, np.ndarray):
+            x = np.array(x, dtype=self.dtype)
+        return x.shape == self.shape
 
 UGV_AGENT = "ugv_jackal"
 UAV_AGENT = "uav_scout"
@@ -41,6 +55,14 @@ class ActionSemantics:
 
 
 class JackalMarlExtensionStub:
+    @property
+    def unwrapped(self):
+        return self
+
+    @property
+    def possible_agents(self):
+        return self.agents.copy()
+
     """Small MARL bridge wrapper around NavigationEnvROS semantics.
 
     This is intentionally a stub:
@@ -92,7 +114,13 @@ class JackalMarlExtensionStub:
             UAV_AGENT: BoxStub(low=0.0, high=1.0, shape=(5, 5), dtype=np.float32),
         }
 
-    def reset(self, seed: Optional[int] = None) -> Tuple[Dict[str, List[float]], Dict[str, dict]]:
+    def action_space(self, agent: str):
+        return self.action_spaces[agent]
+
+    def observation_space(self, agent: str):
+        return self.observation_spaces[agent]
+
+    def reset(self, seed: Optional[int] = None, options: Optional[dict] = None) -> Tuple[Dict[str, List[float]], Dict[str, dict]]:
         if seed is not None:
             random.seed(seed)
 
