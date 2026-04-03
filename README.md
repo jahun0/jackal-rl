@@ -36,6 +36,15 @@ python3 jackal_framework_ingest_check.py
 - `jackal_framework_ingest_check.py`: runnable inside `.venv_marl`
 - next recommended check: `python3 jackal_stub_smoke_test.py`
 
+## Local Run Contract
+
+Install -> Verify -> Run -> Common blocker
+
+- Install: `bash jackal_framework_bootstrap.sh`
+- Verify: `source .venv_marl/bin/activate && python3 jackal_framework_ingest_check.py`
+- Run: `source .venv_marl/bin/activate && python3 jackal_stub_smoke_test.py`
+- Common blocker: record exact failing command + stderr at `research/ideas/jackal_real_backend_smoke_status.md` before escalation.
+
 ## ROS2 handoff for Ubuntu real-backend work
 
 The existing real backend script (`test_real_env.py`) is ROS1-era. For Ubuntu execution planning, use the ROS2 handoff artifacts added in this repo:
