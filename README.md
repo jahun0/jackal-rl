@@ -35,3 +35,22 @@ python3 jackal_framework_ingest_check.py
 - `ray` import: OK
 - `jackal_framework_ingest_check.py`: runnable inside `.venv_marl`
 - next recommended check: `python3 jackal_stub_smoke_test.py`
+
+## ROS2 handoff for Ubuntu real-backend work
+
+The existing real backend script (`test_real_env.py`) is ROS1-era. For Ubuntu execution planning, use the ROS2 handoff artifacts added in this repo:
+
+- `ROS2_MIGRATION_NOTES.md` (ROS1->ROS2/Nav2 mapping + scope)
+- `jackal_ros2_preflight.py` (endpoint readiness gate)
+
+Run preflight on Ubuntu after sourcing ROS2 and launching Jackal/Nav2:
+
+```bash
+python3 jackal_ros2_preflight.py
+```
+
+If you require EKF-filtered odometry specifically:
+
+```bash
+python3 jackal_ros2_preflight.py --strict-odometry-filtered
+```
