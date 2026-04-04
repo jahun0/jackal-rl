@@ -1,0 +1,12 @@
+[FAIL] ros2 CLI not found on PATH. Install/source ROS2 (Ubuntu target).
+
+EXIT_CODE: 2
+
+FAIL_NOTE: This host is macOS (Darwin), not an Ubuntu ROS2 runtime, so the bounded local run stops at missing `ros2` on PATH.
+
+UBUNTU_PRECHECK_SNIPPET:
+cd /path/to/jackal-rl
+source /opt/ros/humble/setup.bash
+python3 jackal_ros2_preflight.py | tee ros2_preflight_result.txt
+if grep -q "PRECHECK_RESULT: PASS" ros2_preflight_result.txt; then { echo "=== topics ==="; ros2 topic list; echo; echo "=== services ==="; ros2 service list; echo; echo "=== actions ==="; ros2 action list; } > ros2_endpoint_inventory.txt; fi
+ls -l ros2_preflight_result.txt ros2_endpoint_inventory.txt 2>/dev/null || true
